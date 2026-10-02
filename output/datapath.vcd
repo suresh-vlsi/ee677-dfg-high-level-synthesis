@@ -1,0 +1,162 @@
+$date
+	Fri Oct 02 18:34:54 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_datapath $end
+$var wire 16 ! y [15:0] $end
+$var parameter 32 " WIDTH $end
+$var reg 16 # a [15:0] $end
+$var reg 16 $ b [15:0] $end
+$var reg 16 % c [15:0] $end
+$var reg 1 & clk $end
+$var reg 16 ' d [15:0] $end
+$var reg 16 ( e [15:0] $end
+$var reg 16 ) f [15:0] $end
+$var reg 16 * g [15:0] $end
+$var reg 16 + h [15:0] $end
+$var reg 1 , reset $end
+$scope module dut $end
+$var wire 16 - a [15:0] $end
+$var wire 16 . b [15:0] $end
+$var wire 16 / c [15:0] $end
+$var wire 1 & clk $end
+$var wire 16 0 d [15:0] $end
+$var wire 16 1 e [15:0] $end
+$var wire 16 2 f [15:0] $end
+$var wire 16 3 g [15:0] $end
+$var wire 16 4 h [15:0] $end
+$var wire 1 , reset $end
+$var wire 16 5 mul_result [15:0] $end
+$var wire 16 6 add_result [15:0] $end
+$var parameter 32 7 WIDTH $end
+$var reg 16 8 R1 [15:0] $end
+$var reg 16 9 R2 [15:0] $end
+$var reg 16 : R3 [15:0] $end
+$var reg 16 ; add_a [15:0] $end
+$var reg 16 < add_b [15:0] $end
+$var reg 3 = cycle [2:0] $end
+$var reg 16 > mul_a [15:0] $end
+$var reg 16 ? mul_b [15:0] $end
+$var reg 16 @ y [15:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b10000 7
+b10000 "
+$end
+#0
+$dumpvars
+bx @
+b0 ?
+b0 >
+bx =
+b0 <
+b0 ;
+bx :
+bx 9
+bx 8
+b0 6
+b0 5
+b1000 4
+b111 3
+b110 2
+b101 1
+b100 0
+b11 /
+b10 .
+b1 -
+1,
+b1000 +
+b111 *
+b110 )
+b101 (
+b100 '
+0&
+b11 %
+b10 $
+b1 #
+bx !
+$end
+#5000
+b111000 5
+b1000 ?
+b10 <
+b111 >
+b11 6
+b1 ;
+b1 =
+b0 !
+b0 @
+b0 :
+b0 9
+b0 8
+1&
+#10000
+0&
+#12000
+0,
+#15000
+b0 ?
+b0 5
+b0 >
+b100 <
+b111 6
+b11 ;
+b111000 9
+b11 8
+b10 =
+1&
+#20000
+0&
+#25000
+b10101 5
+b11 >
+b101 ;
+b111 ?
+b1011 6
+b110 <
+b11 =
+b111 :
+1&
+#30000
+0&
+#35000
+b0 ?
+b0 5
+b0 >
+b1011 <
+b100000 6
+b10101 ;
+b1011 :
+b10101 8
+b100 =
+1&
+#40000
+0&
+#45000
+b111000 <
+b1011000 6
+b100000 ;
+b101 =
+b100000 8
+1&
+#50000
+0&
+#55000
+b1011000 !
+b1011000 @
+1&
+#60000
+0&
+#65000
+1&
+#70000
+0&
+#72000

@@ -1,0 +1,326 @@
+digraph BoundDatapath {
+
+    rankdir=LR;
+    splines=ortho;
+    nodesep=0.65;
+    ranksep=1.0;
+    bgcolor="white";
+
+    graph [
+        fontname="Arial",
+        label="HLS Bound Datapath — Resource Sharing and Register Binding",
+        labelloc=t,
+        fontsize=20,
+        pad=0.3
+    ];
+
+    node [
+        fontname="Arial",
+        fontsize=10,
+        margin="0.16,0.10"
+    ];
+
+    edge [
+        fontname="Arial",
+        fontsize=9,
+        arrowsize=0.7
+    ];
+
+    /* ============================================================
+       PRIMARY INPUTS
+       ============================================================ */
+
+    a [shape=circle, label="a"];
+    b [shape=circle, label="b"];
+    c [shape=circle, label="c"];
+    d [shape=circle, label="d"];
+    e [shape=circle, label="e"];
+    f [shape=circle, label="f"];
+    g [shape=circle, label="g"];
+    h [shape=circle, label="h"];
+
+
+    /* ============================================================
+       INPUT MUX NETWORK
+       ============================================================ */
+
+    ADD_A [
+        shape=box,
+        style="rounded,filled",
+        label="ADD1_A_MUX\n\nR1 | a | c | e",
+        fillcolor="#FFF2CC"
+    ];
+
+    ADD_B [
+        shape=box,
+        style="rounded,filled",
+        label="ADD1_B_MUX\n\nR2 | R3 | b | d | f",
+        fillcolor="#FFF2CC"
+    ];
+
+    MUL_A [
+        shape=box,
+        style="rounded,filled",
+        label="MUL1_A_MUX\n\nR1 | g",
+        fillcolor="#FFF2CC"
+    ];
+
+    MUL_B [
+        shape=box,
+        style="rounded,filled",
+        label="MUL1_B_MUX\n\nR3 | h",
+        fillcolor="#FFF2CC"
+    ];
+
+
+    /* ============================================================
+       FUNCTIONAL UNITS
+       ============================================================ */
+
+    ADD1 [
+        shape=box,
+        style="rounded,filled",
+        label="ADD1\n\nADD",
+        fillcolor="#CFE2F3",
+        penwidth=2
+    ];
+
+    MUL1 [
+        shape=box,
+        style="rounded,filled",
+        label="MUL1\n\nMUL",
+        fillcolor="#D9EAD3",
+        penwidth=2
+    ];
+
+
+    /* ============================================================
+       REGISTER BANK
+       ============================================================ */
+
+    R1 [
+        shape=box,
+        style="rounded,filled",
+        label="R1\n\nx1 → x3 → x5",
+        fillcolor="#F4CCCC",
+        penwidth=2
+    ];
+
+    R2 [
+        shape=box,
+        style="rounded,filled",
+        label="R2\n\nx6",
+        fillcolor="#F4CCCC",
+        penwidth=2
+    ];
+
+    R3 [
+        shape=box,
+        style="rounded,filled",
+        label="R3\n\nx2 → x4",
+        fillcolor="#F4CCCC",
+        penwidth=2
+    ];
+
+
+    /* ============================================================
+       OUTPUT
+       ============================================================ */
+
+    Y [
+        shape=doublecircle,
+        label="y",
+        fillcolor="#D0E0E3",
+        penwidth=2
+    ];
+
+
+    /* ============================================================
+       INPUT → MUX
+       ============================================================ */
+
+    a -> ADD_A;
+    c -> ADD_A;
+    e -> ADD_A;
+
+    b -> ADD_B;
+    d -> ADD_B;
+    f -> ADD_B;
+
+    g -> MUL_A;
+    h -> MUL_B;
+
+
+    /* ============================================================
+       REGISTER FEEDBACK → MUX
+       ============================================================ */
+
+    R1 -> ADD_A [label="R1"];
+    R2 -> ADD_B [label="R2"];
+    R3 -> ADD_B [label="R3"];
+
+    R1 -> MUL_A [label="R1"];
+    R3 -> MUL_B [label="R3"];
+
+
+    /* ============================================================
+       MUX → FUNCTIONAL UNITS
+       ============================================================ */
+
+    ADD_A -> ADD1 [label="A"];
+    ADD_B -> ADD1 [label="B"];
+
+    MUL_A -> MUL1 [label="A"];
+    MUL_B -> MUL1 [label="B"];
+
+
+    /* ============================================================
+       FUNCTIONAL UNIT RESULT BUS
+       ============================================================ */
+
+    ADD1 -> R1 [
+        label="ADD result\nwrite enable"
+    ];
+
+    ADD1 -> R3 [
+        label="ADD result\nwrite enable"
+    ];
+
+    ADD1 -> Y [
+        label="Cycle 5"
+    ];
+
+    MUL1 -> R1 [
+        label="MUL result\nwrite enable"
+    ];
+
+    MUL1 -> R2 [
+        label="MUL result\nwrite enable"
+    ];
+
+
+    /* ============================================================
+       CONTROL / SCHEDULE INFORMATION
+       ============================================================ */
+
+    Schedule [
+        shape=plain,
+        label=<
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+            <TR>
+                <TD BGCOLOR="#D9EAF7"><B>Cycle</B></TD>
+                <TD BGCOLOR="#D9EAF7"><B>ADD1</B></TD>
+                <TD BGCOLOR="#D9EAF7"><B>MUL1</B></TD>
+                <TD BGCOLOR="#D9EAF7"><B>Destination</B></TD>
+            </TR>
+
+            <TR>
+                <TD><B>1</B></TD>
+                <TD>N1: a+b</TD>
+                <TD>N6: g×h</TD>
+                <TD>R1, R2</TD>
+            </TR>
+
+            <TR>
+                <TD><B>2</B></TD>
+                <TD>N2: c+d</TD>
+                <TD>—</TD>
+                <TD>R3</TD>
+            </TR>
+
+            <TR>
+                <TD><B>3</B></TD>
+                <TD>N4: e+f</TD>
+                <TD>N3: R1×R3</TD>
+                <TD>R3, R1</TD>
+            </TR>
+
+            <TR>
+                <TD><B>4</B></TD>
+                <TD>N5: R1+R3</TD>
+                <TD>—</TD>
+                <TD>R1</TD>
+            </TR>
+
+            <TR>
+                <TD><B>5</B></TD>
+                <TD>N7: R1+R2</TD>
+                <TD>—</TD>
+                <TD>y</TD>
+            </TR>
+        </TABLE>
+        >
+    ];
+
+
+    /* ============================================================
+       BINDING INFORMATION
+       ============================================================ */
+
+    Binding [
+        shape=plain,
+        label=<
+        <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+
+            <TR>
+                <TD COLSPAN="2" BGCOLOR="#EADCF8">
+                    <B>Functional Unit Binding</B>
+                </TD>
+            </TR>
+
+            <TR>
+                <TD>ADD1</TD>
+                <TD>N1, N2, N4, N5, N7</TD>
+            </TR>
+
+            <TR>
+                <TD>MUL1</TD>
+                <TD>N6, N3</TD>
+            </TR>
+
+            <TR>
+                <TD COLSPAN="2" BGCOLOR="#EADCF8">
+                    <B>Register Binding</B>
+                </TD>
+            </TR>
+
+            <TR>
+                <TD>R1</TD>
+                <TD>x1, x3, x5</TD>
+            </TR>
+
+            <TR>
+                <TD>R2</TD>
+                <TD>x6</TD>
+            </TR>
+
+            <TR>
+                <TD>R3</TD>
+                <TD>x2, x4</TD>
+            </TR>
+
+        </TABLE>
+        >
+    ];
+
+
+    /* ============================================================
+       INVISIBLE EDGES FOR LAYOUT
+       ============================================================ */
+
+    Schedule -> Binding [
+        style=invis,
+        weight=10
+    ];
+
+    ADD1 -> Schedule [
+        style=invis,
+        weight=2
+    ];
+
+    Binding -> Y [
+        style=invis,
+        weight=2
+    ];
+
+}

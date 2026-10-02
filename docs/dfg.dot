@@ -1,0 +1,98 @@
+digraph DFG {
+
+    rankdir=LR;
+    splines=ortho;
+    nodesep=0.6;
+    ranksep=0.9;
+
+    node [
+        shape=box,
+        style="rounded,filled",
+        fontname="Arial",
+        fontsize=12
+    ];
+
+    edge [
+        fontname="Arial",
+        fontsize=10
+    ];
+
+    /* Primary inputs */
+
+    a [shape=circle, label="a"];
+    b [shape=circle, label="b"];
+    c [shape=circle, label="c"];
+    d [shape=circle, label="d"];
+    e [shape=circle, label="e"];
+    f [shape=circle, label="f"];
+    g [shape=circle, label="g"];
+    h [shape=circle, label="h"];
+
+    /* DFG operations */
+
+    N1 [
+        label="N1\nADD\nx1 = a + b",
+        fillcolor="lightblue"
+    ];
+
+    N2 [
+        label="N2\nADD\nx2 = c + d",
+        fillcolor="lightblue"
+    ];
+
+    N3 [
+        label="N3\nMUL\nx3 = x1 × x2",
+        fillcolor="lightgreen"
+    ];
+
+    N4 [
+        label="N4\nADD\nx4 = e + f",
+        fillcolor="lightblue"
+    ];
+
+    N5 [
+        label="N5\nADD\nx5 = x3 + x4",
+        fillcolor="lightblue"
+    ];
+
+    N6 [
+        label="N6\nMUL\nx6 = g × h",
+        fillcolor="lightgreen"
+    ];
+
+    N7 [
+        label="N7\nADD\ny = x5 + x6",
+        fillcolor="lightblue"
+    ];
+
+    y [
+        shape=doublecircle,
+        label="y",
+        fillcolor="lightyellow"
+    ];
+
+    /* Connections */
+
+    a -> N1;
+    b -> N1;
+
+    c -> N2;
+    d -> N2;
+
+    N1 -> N3 [label="x1"];
+    N2 -> N3 [label="x2"];
+
+    e -> N4;
+    f -> N4;
+
+    N3 -> N5 [label="x3"];
+    N4 -> N5 [label="x4"];
+
+    g -> N6;
+    h -> N6;
+
+    N5 -> N7 [label="x5"];
+    N6 -> N7 [label="x6"];
+
+    N7 -> y;
+}

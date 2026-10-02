@@ -1,0 +1,157 @@
+digraph ScheduledDFG {
+
+    rankdir=LR;
+    splines=polyline;
+    nodesep=0.8;
+    ranksep=1.2;
+
+    graph [
+        fontname="Arial",
+        label="Scheduled Data Flow Graph — List Scheduling",
+        labelloc=t,
+        fontsize=20
+    ];
+
+    node [
+        shape=box,
+        style="rounded,filled",
+        fontname="Arial",
+        fontsize=11,
+        margin="0.18,0.12"
+    ];
+
+    edge [
+        fontname="Arial",
+        fontsize=9,
+        arrowsize=0.7
+    ];
+
+    /* =========================
+       CYCLE 1
+       ========================= */
+
+    subgraph cluster_cycle1 {
+
+        label="CYCLE 1";
+        fontsize=15;
+        style="rounded,dashed";
+
+        N1 [
+            label="N1\nADD\na + b → x1",
+            fillcolor="lightblue"
+        ];
+
+        N6 [
+            label="N6\nMUL\ng × h → x6",
+            fillcolor="lightgreen"
+        ];
+
+        { rank=same; N1; N6; }
+    }
+
+    /* =========================
+       CYCLE 2
+       ========================= */
+
+    subgraph cluster_cycle2 {
+
+        label="CYCLE 2";
+        fontsize=15;
+        style="rounded,dashed";
+
+        N2 [
+            label="N2\nADD\nc + d → x2",
+            fillcolor="lightblue"
+        ];
+    }
+
+    /* =========================
+       CYCLE 3
+       ========================= */
+
+    subgraph cluster_cycle3 {
+
+        label="CYCLE 3";
+        fontsize=15;
+        style="rounded,dashed";
+
+        N3 [
+            label="N3\nMUL\nx1 × x2 → x3",
+            fillcolor="lightgreen"
+        ];
+
+        N4 [
+            label="N4\nADD\ne + f → x4",
+            fillcolor="lightblue"
+        ];
+
+        { rank=same; N3; N4; }
+    }
+
+    /* =========================
+       CYCLE 4
+       ========================= */
+
+    subgraph cluster_cycle4 {
+
+        label="CYCLE 4";
+        fontsize=15;
+        style="rounded,dashed";
+
+        N5 [
+            label="N5\nADD\nx3 + x4 → x5",
+            fillcolor="lightblue"
+        ];
+    }
+
+    /* =========================
+       CYCLE 5
+       ========================= */
+
+    subgraph cluster_cycle5 {
+
+        label="CYCLE 5";
+        fontsize=15;
+        style="rounded,dashed";
+
+        N7 [
+            label="N7\nADD\nx5 + x6 → y",
+            fillcolor="lightblue"
+        ];
+    }
+
+    /* =========================
+       DATA DEPENDENCIES
+       ========================= */
+
+    N1 -> N3 [xlabel="x1"];
+    N2 -> N3 [xlabel="x2"];
+
+    N3 -> N5 [xlabel="x3"];
+    N4 -> N5 [xlabel="x4"];
+
+    N5 -> N7 [xlabel="x5"];
+    N6 -> N7 [xlabel="x6"];
+
+    /* Force cycle ordering */
+
+    N1 -> N2 [
+        style=invis,
+        weight=100
+    ];
+
+    N2 -> N3 [
+        style=invis,
+        weight=100
+    ];
+
+    N3 -> N5 [
+        style=invis,
+        weight=100
+    ];
+
+    N5 -> N7 [
+        style=invis,
+        weight=100
+    ];
+}

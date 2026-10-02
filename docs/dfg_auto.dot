@@ -1,0 +1,63 @@
+digraph DFG {
+
+    rankdir=LR;
+    splines=ortho;
+    nodesep=0.7;
+    ranksep=1.0;
+
+    graph [
+        fontname="Arial",
+        label="Data Flow Graph (DFG) — Automatic Visualization",
+        labelloc=t,
+        fontsize=20,
+        pad=0.3
+    ];
+
+    node [
+        fontname="Arial",
+        fontsize=10
+    ];
+
+    edge [
+        fontname="Arial",
+        fontsize=9,
+        arrowsize=0.7
+    ];
+
+    IN_a [shape=circle, label="a", fillcolor="white", style="filled"];
+    IN_b [shape=circle, label="b", fillcolor="white", style="filled"];
+    IN_c [shape=circle, label="c", fillcolor="white", style="filled"];
+    IN_d [shape=circle, label="d", fillcolor="white", style="filled"];
+    IN_e [shape=circle, label="e", fillcolor="white", style="filled"];
+    IN_f [shape=circle, label="f", fillcolor="white", style="filled"];
+    IN_g [shape=circle, label="g", fillcolor="white", style="filled"];
+    IN_h [shape=circle, label="h", fillcolor="white", style="filled"];
+
+    N1 [shape=box, style="rounded,filled", label="N1\nADD\nx1", fillcolor="lightblue", penwidth=1.5];
+    N2 [shape=box, style="rounded,filled", label="N2\nADD\nx2", fillcolor="lightblue", penwidth=1.5];
+    N3 [shape=box, style="rounded,filled", label="N3\nMUL\nx3", fillcolor="lightgreen", penwidth=1.5];
+    N4 [shape=box, style="rounded,filled", label="N4\nADD\nx4", fillcolor="lightblue", penwidth=1.5];
+    N5 [shape=box, style="rounded,filled", label="N5\nADD\nx5", fillcolor="lightblue", penwidth=1.5];
+    N6 [shape=box, style="rounded,filled", label="N6\nMUL\nx6", fillcolor="lightgreen", penwidth=1.5];
+    N7 [shape=box, style="rounded,filled", label="N7\nADD\ny", fillcolor="lightblue", penwidth=1.5];
+
+    OUT_y [shape=doublecircle, label="y", fillcolor="lightcyan", style="filled"];
+
+    IN_a -> N1;
+    IN_b -> N1;
+    IN_c -> N2;
+    IN_d -> N2;
+    N1 -> N3 [xlabel="x1"];
+    N2 -> N3 [xlabel="x2"];
+    IN_e -> N4;
+    IN_f -> N4;
+    N3 -> N5 [xlabel="x3"];
+    N4 -> N5 [xlabel="x4"];
+    IN_g -> N6;
+    IN_h -> N6;
+    N5 -> N7 [xlabel="x5"];
+    N6 -> N7 [xlabel="x6"];
+
+    N7 -> OUT_y;
+
+}

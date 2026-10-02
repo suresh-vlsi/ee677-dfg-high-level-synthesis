@@ -1,0 +1,11 @@
+INPUTS: a,b,c,d,e,f,g,h
+
+NODE: N1 ADD a b x1
+NODE: N2 ADD c d x2
+NODE: N3 MUL x1 x2 x3
+NODE: N4 ADD e f x4
+NODE: N5 ADD x3 x4 x5
+NODE: N6 MUL g h x6
+NODE: N7 ADD x5 x6 y
+
+OUTPUTS: y

@@ -1,0 +1,356 @@
+digraph DatapathArchitecture {
+
+    rankdir=LR;
+    splines=polyline;
+    nodesep=0.7;
+    ranksep=1.0;
+    bgcolor="white";
+
+    graph [
+        fontname="Arial",
+        label="HLS Datapath Architecture — Resource Sharing and Register Binding",
+        labelloc=t,
+        fontsize=20,
+        pad=0.3
+    ];
+
+    node [
+        fontname="Arial",
+        fontsize=10,
+        margin="0.16,0.10"
+    ];
+
+    edge [
+        fontname="Arial",
+        fontsize=9,
+        arrowsize=0.7
+    ];
+
+    /* =====================================================
+       PRIMARY INPUTS
+       ===================================================== */
+
+    a [shape=circle, label="a"];
+    b [shape=circle, label="b"];
+    c [shape=circle, label="c"];
+    d [shape=circle, label="d"];
+    e [shape=circle, label="e"];
+    f [shape=circle, label="f"];
+    g [shape=circle, label="g"];
+    h [shape=circle, label="h"];
+
+
+    /* =====================================================
+       ADDER INPUT MUXES
+       ===================================================== */
+
+    ADD_MUX_A [
+        shape=box,
+        style="rounded,filled",
+        label="ADD1 A-MUX\n\nR1 | a | c | e",
+        fillcolor="#FFF2CC",
+        penwidth=1.5
+    ];
+
+    ADD_MUX_B [
+        shape=box,
+        style="rounded,filled",
+        label="ADD1 B-MUX\n\nR2 | R3 | b | d | f",
+        fillcolor="#FFF2CC",
+        penwidth=1.5
+    ];
+
+
+    /* =====================================================
+       MULTIPLIER INPUT MUXES
+       ===================================================== */
+
+    MUL_MUX_A [
+        shape=box,
+        style="rounded,filled",
+        label="MUL1 A-MUX\n\nR1 | g",
+        fillcolor="#FFF2CC",
+        penwidth=1.5
+    ];
+
+    MUL_MUX_B [
+        shape=box,
+        style="rounded,filled",
+        label="MUL1 B-MUX\n\nR3 | h",
+        fillcolor="#FFF2CC",
+        penwidth=1.5
+    ];
+
+
+    /* =====================================================
+       FUNCTIONAL UNITS
+       ===================================================== */
+
+    ADD1 [
+        shape=box,
+        style="rounded,filled",
+        label="ADD1\n\nSHARED ADDER",
+        fillcolor="#CFE2F3",
+        penwidth=2
+    ];
+
+    MUL1 [
+        shape=box,
+        style="rounded,filled",
+        label="MUL1\n\nSHARED MULTIPLIER",
+        fillcolor="#D9EAD3",
+        penwidth=2
+    ];
+
+
+    /* =====================================================
+       WRITE CONTROL
+       ===================================================== */
+
+    WRITE_CTRL [
+        shape=box,
+        style="rounded,filled",
+        label="REGISTER WRITE\nCONTROL\n\nCycle-dependent\nwrite enable",
+        fillcolor="#EADCF8",
+        penwidth=2
+    ];
+
+
+    /* =====================================================
+       REGISTER BANK
+       ===================================================== */
+
+    R1 [
+        shape=box,
+        style="rounded,filled",
+        label="R1\n\nx1 → x3 → x5",
+        fillcolor="#F4CCCC",
+        penwidth=2
+    ];
+
+    R2 [
+        shape=box,
+        style="rounded,filled",
+        label="R2\n\nx6",
+        fillcolor="#F4CCCC",
+        penwidth=2
+    ];
+
+    R3 [
+        shape=box,
+        style="rounded,filled",
+        label="R3\n\nx2 → x4",
+        fillcolor="#F4CCCC",
+        penwidth=2
+    ];
+
+
+    /* =====================================================
+       OUTPUT REGISTER
+       ===================================================== */
+
+    Y [
+        shape=doublecircle,
+        label="y",
+        fillcolor="#D0E0E3",
+        penwidth=2
+    ];
+
+
+    /* =====================================================
+       INPUT CONNECTIONS
+       ===================================================== */
+
+    a -> ADD_MUX_A;
+    c -> ADD_MUX_A;
+    e -> ADD_MUX_A;
+
+    b -> ADD_MUX_B;
+    d -> ADD_MUX_B;
+    f -> ADD_MUX_B;
+
+    g -> MUL_MUX_A;
+    h -> MUL_MUX_B;
+
+
+    /* =====================================================
+       REGISTER FEEDBACK
+       ===================================================== */
+
+    R1 -> ADD_MUX_A [label="R1"];
+    R2 -> ADD_MUX_B [label="R2"];
+    R3 -> ADD_MUX_B [label="R3"];
+
+    R1 -> MUL_MUX_A [label="R1"];
+    R3 -> MUL_MUX_B [label="R3"];
+
+
+    /* =====================================================
+       MUX → FUNCTIONAL UNIT
+       ===================================================== */
+
+    ADD_MUX_A -> ADD1 [label="A"];
+    ADD_MUX_B -> ADD1 [label="B"];
+
+    MUL_MUX_A -> MUL1 [label="A"];
+    MUL_MUX_B -> MUL1 [label="B"];
+
+
+    /* =====================================================
+       FU RESULTS → WRITE CONTROL
+       ===================================================== */
+
+    ADD1 -> WRITE_CTRL [
+        label="ADD result"
+    ];
+
+    MUL1 -> WRITE_CTRL [
+        label="MUL result"
+    ];
+
+
+    /* =====================================================
+       WRITE CONTROL → REGISTERS
+       ===================================================== */
+
+    WRITE_CTRL -> R1 [
+        label="R1 write"
+    ];
+
+    WRITE_CTRL -> R2 [
+        label="R2 write"
+    ];
+
+    WRITE_CTRL -> R3 [
+        label="R3 write"
+    ];
+
+    WRITE_CTRL -> Y [
+        label="Cycle 5"
+    ];
+
+
+    /* =====================================================
+       CONTROL / SCHEDULE TABLE
+       ===================================================== */
+
+    CONTROL [
+        shape=plain,
+        label=<
+        <TABLE BORDER="1" CELLBORDER="1"
+               CELLSPACING="0" CELLPADDING="6">
+
+            <TR>
+                <TD COLSPAN="4" BGCOLOR="#D9EAF7">
+                    <B>Cycle-Level Control</B>
+                </TD>
+            </TR>
+
+            <TR>
+                <TD BGCOLOR="#D9EAF7"><B>Cycle</B></TD>
+                <TD BGCOLOR="#D9EAF7"><B>ADD1</B></TD>
+                <TD BGCOLOR="#D9EAF7"><B>MUL1</B></TD>
+                <TD BGCOLOR="#D9EAF7"><B>Write</B></TD>
+            </TR>
+
+            <TR>
+                <TD>1</TD>
+                <TD>N1: a+b</TD>
+                <TD>N6: g×h</TD>
+                <TD>R1, R2</TD>
+            </TR>
+
+            <TR>
+                <TD>2</TD>
+                <TD>N2: c+d</TD>
+                <TD>—</TD>
+                <TD>R3</TD>
+            </TR>
+
+            <TR>
+                <TD>3</TD>
+                <TD>N4: e+f</TD>
+                <TD>N3: R1×R3</TD>
+                <TD>R3, R1</TD>
+            </TR>
+
+            <TR>
+                <TD>4</TD>
+                <TD>N5: R1+R3</TD>
+                <TD>—</TD>
+                <TD>R1</TD>
+            </TR>
+
+            <TR>
+                <TD>5</TD>
+                <TD>N7: R1+R2</TD>
+                <TD>—</TD>
+                <TD>y</TD>
+            </TR>
+
+        </TABLE>
+        >
+    ];
+
+
+    /* =====================================================
+       BINDING TABLE
+       ===================================================== */
+
+    BINDING [
+        shape=plain,
+        label=<
+        <TABLE BORDER="1" CELLBORDER="1"
+               CELLSPACING="0" CELLPADDING="6">
+
+            <TR>
+                <TD COLSPAN="2" BGCOLOR="#EADCF8">
+                    <B>Binding Results</B>
+                </TD>
+            </TR>
+
+            <TR>
+                <TD><B>ADD1</B></TD>
+                <TD>N1, N2, N4, N5, N7</TD>
+            </TR>
+
+            <TR>
+                <TD><B>MUL1</B></TD>
+                <TD>N6, N3</TD>
+            </TR>
+
+            <TR>
+                <TD><B>R1</B></TD>
+                <TD>x1, x3, x5</TD>
+            </TR>
+
+            <TR>
+                <TD><B>R2</B></TD>
+                <TD>x6</TD>
+            </TR>
+
+            <TR>
+                <TD><B>R3</B></TD>
+                <TD>x2, x4</TD>
+            </TR>
+
+        </TABLE>
+        >
+    ];
+
+
+    /* =====================================================
+       LAYOUT HINTS
+       ===================================================== */
+
+    CONTROL -> BINDING [
+        style=invis,
+        weight=10
+    ];
+
+    ADD1 -> CONTROL [
+        style=invis,
+        weight=2
+    ];
+
+}
